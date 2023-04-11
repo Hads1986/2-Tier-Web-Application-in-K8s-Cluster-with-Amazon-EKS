@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: employees
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employees
+  template:
+    metadata:
+      labels:
+        app: employees
+    spec:
+      containers:
+      - name: webapp
+        image: 070752711409.dkr.ecr.us-east-1.amazonaws.com/group7-ecr:app.v0.1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DBHOST
+          value: "mysql.final.svc.cluster.local"
+        - name: DBPORT
+          value: "3306"
+        - name: DBPWD
+          value: "db_pass123"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
