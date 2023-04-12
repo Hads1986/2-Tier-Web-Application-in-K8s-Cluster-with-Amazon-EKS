@@ -5,16 +5,16 @@ import os
 
 app = Flask(__name__)
 
-DBHOST = os.environ.get("DBHOST") or "localhost"
-DBUSER = os.environ.get("DBUSER") or "root"
-DBPWD = os.environ.get("DBPWD") or "password"
+DBHOST = os.environ.get("DBHOST")
+DBUSER = os.environ.get("DBUSER")
+DBPWD = os.environ.get("DBPWD")
 DATABASE = os.environ.get("DATABASE") or "employees"
 DBPORT = int(os.environ.get("DBPORT"))
 
 # Create a connection to the MySQL database
 db_conn = connections.Connection(
     host= DBHOST,
-    port=DBPORT,
+    port= DBPORT,
     user= DBUSER,
     password= DBPWD, 
     db= DATABASE
@@ -25,11 +25,11 @@ table = 'employee';
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    return render_template('addemp2.html', color="pink")
+    return render_template('addemp.html')
 
 @app.route("/about", methods=['GET','POST'])
 def about():
-    return render_template('about.html', color="pink")
+    return render_template('about.html')
     
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
@@ -53,11 +53,11 @@ def AddEmp():
         cursor.close()
 
     print("all modification done...")
-    return render_template('addempoutput.html', name=emp_name, color="pink")
+    return render_template('addempoutput.html', name=emp_name)
 
 @app.route("/getemp", methods=['GET', 'POST'])
 def GetEmp():
-    return render_template("getemp.html", color="pink")
+    return render_template("getemp.html")
 
 
 @app.route("/fetchdata", methods=['GET','POST'])
@@ -86,30 +86,6 @@ def FetchData():
         cursor.close()
 
     return render_template("getempoutput.html", id=output["emp_id"], fname=output["first_name"],
-                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"], color="pink")
-
-if __name__ == '__main__':
-    
-    # Check for Command Line Parameters for color
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--color', required=False)
-    # args = parser.parse_args()
-
-#    if args.color:
-#        print("Color from command line argument =" + args.color)
-#        COLOR = args.color
-#        if COLOR_FROM_ENV:
-#            print("A color was set through environment variable -" + COLOR_FROM_ENV + ". However, color from command line argument takes precendence.")
-#
-#    elif COLOR_FROM_ENV:
-#        print("No Command line argument. Color from environment variable =" + COLOR_FROM_ENV)
-#        COLOR = COLOR_FROM_ENV
-#    else:
-#        print("No command line argument or environment variable. Picking a Random Color =" + COLOR)
-
-    # Check if input color is a supported one
-#    if COLOR not in color_codes:
-#        print("Color not supported. Received '" + COLOR + "' expected one of " + SUPPORTED_COLORS)
-#        exit(1)
+                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"])
 
     app.run(host='0.0.0.0',port=8080,debug=True)
