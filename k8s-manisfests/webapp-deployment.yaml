@@ -26,6 +26,11 @@ spec:
           value: "3306"
         - name: DBPWD
           value: "db_pass123"
+        - name: BACKGROUND_IMAGE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: webapp-config-map
+              key: BACKGROUND_IMAGE_URL
   strategy:
     type: RollingUpdate
     rollingUpdate:
