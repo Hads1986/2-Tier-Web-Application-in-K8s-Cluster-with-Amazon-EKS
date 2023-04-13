@@ -29,12 +29,12 @@ spec:
           value: "3306"
         - name: DBPWD
           value: "db_pass123"
-        - name: BACKGROUND_IMAGE
-          valueFrom:
-            configMapKeyRef:
-              name: webapp-config-map
-              key: BACKGROUND_IMAGE
-      volumes:
-      - name: config
-        configMap:
-          name: webapp-config-map
+        #- name: BACKGROUND_IMAGE
+        #  valueFrom:
+        #    configMapKeyRef:
+        #      name: webapp-config-map
+        #      key: BACKGROUND_IMAGE
+      #volumes:
+      #- name: config
+      #  configMap:
+      #    name: webapp-config-map
