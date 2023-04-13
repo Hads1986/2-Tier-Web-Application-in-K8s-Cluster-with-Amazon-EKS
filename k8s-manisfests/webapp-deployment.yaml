@@ -17,9 +17,6 @@ spec:
       containers:
       - name: webapp
         image: 070752711409.dkr.ecr.us-east-1.amazonaws.com/group7-ecr:app.v0.1
-        volumeMounts:
-        - name: config
-          mountPath: /local-background-image
         ports:
         - containerPort: 8080
         env:
@@ -29,12 +26,8 @@ spec:
           value: "3306"
         - name: DBPWD
           value: "db_pass123"
-        #- name: BACKGROUND_IMAGE
-        #  valueFrom:
-        #    configMapKeyRef:
-        #      name: webapp-config-map
-        #      key: BACKGROUND_IMAGE
-      #volumes:
-      #- name: config
-      #  configMap:
-      #    name: webapp-config-map
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1    
