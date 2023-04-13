@@ -1,21 +1,24 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request
 from pymysql import connections
 import os
+import random
+import argparse
 import boto3
-import botocore
+
 
 app = Flask(__name__)
 
-DBHOST = os.environ.get("DBHOST")
-DBUSER = os.environ.get("DBUSER")
-DBPWD = os.environ.get("DBPWD")
+DBHOST = os.environ.get("DBHOST") or "localhost"
+DBUSER = os.environ.get("DBUSER") or "root"
+DBPWD = os.environ.get("DBPWD") or "password"
 DATABASE = os.environ.get("DATABASE") or "employees"
-DBPORT = int(os.environ.get("DBPORT"))
+BACKIMG = os.environ.get("BGIMG") or "toronto.jpg"
+DBPORT = int(os.environ.get("DBPORT")) or 3306
 
 # Create a connection to the MySQL database
 db_conn = connections.Connection(
     host= DBHOST,
-    port= DBPORT,
+    port=DBPORT,
     user= DBUSER,
     password= DBPWD, 
     db= DATABASE
@@ -24,13 +27,33 @@ db_conn = connections.Connection(
 output = {}
 table = 'employee';
 
+image = "https://s3bucket-g7.s3.amazonaws.com/rashford.png"
+
+bucket = "s3bucket-g7"
+image_default = "toronto.jpg"
+
+@app.route("/download", methods=['GET','POST'])
+def download(bucket, imageName = image_default):
+    try:
+        imagesDir = "images"
+        if not os.path.exists(imagesDir):
+            os.makedirs(imagesDir)
+        bgImagePath = os.path.join(imagesDir, "toronto.jpg")
+        
+        print(bucket, imageName)
+        s3 = boto3.resource('s3')
+        s3.Bucket(bucket).download_file(imageName, bgImagePath)
+        return bgImagePath
+    except Exception as e:
+        print("Exception occured while fetching the image! Check the log --> ", e)
+       
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    return render_template('addemp.html')
+    return render_template('addemp.html', image=image)
 
 @app.route("/about", methods=['GET','POST'])
 def about():
-    return render_template('about.html')
+    return render_template('about.html', image=image)
     
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
@@ -54,11 +77,11 @@ def AddEmp():
         cursor.close()
 
     print("all modification done...")
-    return render_template('addempoutput.html', name=emp_name)
+    return render_template('addempoutput.html', name=emp_name, image=image)
 
 @app.route("/getemp", methods=['GET', 'POST'])
 def GetEmp():
-    return render_template("getemp.html")
+    return render_template("getemp.html", image=image)
 
 
 @app.route("/fetchdata", methods=['GET','POST'])
@@ -73,7 +96,6 @@ def FetchData():
         cursor.execute(select_sql,(emp_id))
         result = cursor.fetchone()
         
-        # Add No Employee found form
         output["emp_id"] = result[0]
         output["first_name"] = result[1]
         output["last_name"] = result[2]
@@ -87,24 +109,8 @@ def FetchData():
         cursor.close()
 
     return render_template("getempoutput.html", id=output["emp_id"], fname=output["first_name"],
-                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"])
-                           
-def download_file(file_name, bucket):
-    """
-    Function to download a given file from an S3 bucket to the /tmp/ directory
-    """
-    s3 = boto3.resource('s3')
-    output = f"/tmp/{file_name}"  # Use the /tmp/ directory for storing the downloaded file
-    s3.Bucket(bucket).download_file(file_name, output)
+                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"], image=image)
 
-    return output
-
-# Replace "my-bucket-name" and "my-image.jpg" with your own bucket and file names
-file_name = "toronto.jpg"
-bucket = "s3bucket-g7"
-
-# Call the function to download the file and save it locally
-local_file_path = download_file(file_name, bucket)
-print(f"File downloaded and saved to {local_file_path}")
-
+if __name__ == '__main__':
+    download(bucket, BACKIMG)
     app.run(host='0.0.0.0',port=8080,debug=True)
