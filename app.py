@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 from pymysql import connections
 import os
-
+import boto3
+import botocore
 
 app = Flask(__name__)
 
@@ -87,5 +88,23 @@ def FetchData():
 
     return render_template("getempoutput.html", id=output["emp_id"], fname=output["first_name"],
                            lname=output["last_name"], interest=output["primary_skills"], location=output["location"])
+                           
+def download_file(file_name, bucket):
+    """
+    Function to download a given file from an S3 bucket to the /tmp/ directory
+    """
+    s3 = boto3.resource('s3')
+    output = f"/tmp/{file_name}"  # Use the /tmp/ directory for storing the downloaded file
+    s3.Bucket(bucket).download_file(file_name, output)
+
+    return output
+
+# Replace "my-bucket-name" and "my-image.jpg" with your own bucket and file names
+file_name = "toronto.jpg"
+bucket = "s3bucket-g7"
+
+# Call the function to download the file and save it locally
+local_file_path = download_file(file_name, bucket)
+print(f"File downloaded and saved to {local_file_path}")
 
     app.run(host='0.0.0.0',port=8080,debug=True)

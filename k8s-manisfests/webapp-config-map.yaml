@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: webapp-config-map
 data:
-  BACKGROUND_IMAGE_URL: "https://s3bucket-g7.s3.amazonaws.com/toronto.jpg"
+  BACKGROUND_IMAGE: "https://s3bucket-g7.s3.amazonaws.com/toronto.jpg"
