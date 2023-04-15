@@ -21,14 +21,14 @@ spec:
         - containerPort: 8080
         env:
         - name: DBHOST
-            valueFrrom:
+            valueFrom:
               secretKeyRef:
-                name: webapp-secrtet
+                name: webapp-secret
                 key: DBHOST
           - name: DBPWD
             valueFrom:
               secretKeyRef:
-                name: wepapp-secret
+                name: webapp-secret
                 key: DBPWD
           - name: DBPORT
             valueFrom:
@@ -36,7 +36,7 @@ spec:
               name: webapp-secret
               key: DBPORT
         -  strategy:
-    type: RollingUpdte
+    type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1   
