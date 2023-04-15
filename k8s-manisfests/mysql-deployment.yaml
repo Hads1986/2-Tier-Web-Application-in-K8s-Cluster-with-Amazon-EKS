@@ -21,7 +21,12 @@ spec:
         - containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: "db_pass123"
+      volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: vol-mysql
+        ports:
+        - containerPort: 3306
+        value: "db_pass123"
         - name: DBPORT
           value: "3306"
   strategy:
