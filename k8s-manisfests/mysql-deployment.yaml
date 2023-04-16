@@ -37,4 +37,8 @@ spec:
         - name: vol-mysql
           persistentVolumeClaim:
             claimName: mysql-pvc
-  
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
