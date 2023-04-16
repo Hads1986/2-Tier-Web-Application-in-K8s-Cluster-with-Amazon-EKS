@@ -16,18 +16,22 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: 070752711409.dkr.ecr.us-east-1.amazonaws.com/group7-ecr:app.v0.1
+        image: 070752711409.dkr.ecr.us-east-1.amazonaws.com/group7-ecr:latest
         ports:
         - containerPort: 8080
         env:
-        - name: DBHOST
-          value: "mysql.final.svc.cluster.local"
-        - name: DBPORT
-          value: "3306"
-        - name: DBPWD
-          value: "db_pass123"
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1    
+          - name: DBHOST
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: DBHOST
+          - name: DBPWD
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: DBPWD
+          - name: DBPORT
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: DBPORT
