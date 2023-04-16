@@ -8,8 +8,8 @@ spec:
   accessModes:
   - ReadWriteOnce
   resources:
-    requests: metadata
-      storage: 2 GI
+    requests:
+      storage: 2Gi
        
      
    

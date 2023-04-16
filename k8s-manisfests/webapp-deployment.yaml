@@ -21,13 +21,22 @@ spec:
         - containerPort: 8080
         env:
         - name: DBHOST
-          value: "mysql.final.svc.cluster.local"
-        - name: DBPORT
-          value: "3306"
-        - name: DBPWD
-          value: "db_pass123"
-  strategy:
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: DBHOST
+          - name: DBPWD
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: DBPWD
+          - name: DBPORT
+            valueFrom:
+            secretKeyRef:
+              name: webapp-secret
+              key: DBPORT
+        -  strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
-      maxUnavailable: 1    
+      maxUnavailable: 1   
