@@ -17,20 +17,24 @@ spec:
       containers:
       - name: mysql
         image: 070752711409.dkr.ecr.us-east-1.amazonaws.com/group7-ecr:db.v0.1
-        ports:
-        - containerPort: 3306
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-      volumeMounts:
+        volumeMounts:
         - mountPath: /var/lib/mysql
           name: vol-mysql
         ports:
         - containerPort: 3306
-        value: "db_pass123"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: DBPWD
         - name: DBPORT
-          value: "3306"
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: DBPORT
+      volumes:
+        - name: vol-mysql
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+  
