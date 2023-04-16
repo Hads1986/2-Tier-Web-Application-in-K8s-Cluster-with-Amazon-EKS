@@ -30,6 +30,7 @@ jobs:
         IMAGE_TAG_DB: db.v0.1
 
       run: |
+        cd application
         docker build -t $ECR_REGISTRY/${ECR_REPOSITORY}:${IMAGE_TAG_DB} -f Dockerfile_mysql .
         docker build -t $ECR_REGISTRY/${ECR_REPOSITORY}:${IMAGE_TAG_APP} -f Dockerfile .
         docker push $ECR_REGISTRY/${ECR_REPOSITORY}:${IMAGE_TAG_DB}
