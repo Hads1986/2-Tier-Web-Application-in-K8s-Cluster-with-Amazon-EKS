@@ -1,14 +1,14 @@
-         ___        ______     ____ _                 _  ___  
-        / \ \      / / ___|   / ___| | ___  _   _  __| |/ _ \ 
-       / _ \ \ /\ / /\___ \  | |   | |/ _ \| | | |/ _` | (_) |
-      / ___ \ V  V /  ___) | | |___| | (_) | |_| | (_| |\__, |
-     /_/   \_\_/\_/  |____/   \____|_|\___/ \__,_|\__,_|  /_/ 
- ----------------------------------------------------------------- 
+CLO835NBB Final Assignment
+Group 7
+Deployment of 2-tiered web application to managed K8s cluster on Amazon EKS
 
+Steps to perform:
 
-Hi there! Welcome to AWS Cloud9!
-
-To get started, create some files, play with the terminal,
-or visit https://docs.aws.amazon.com/console/cloud9/ for our documentation.
-
-Happy coding!
+kubectl create ns finall
+kubectl apply -f mysql-pvc.yaml
+kubectl apply -f mysql-secret.yaml
+kubectl apply -f mysql-deployment.yaml
+kubectl apply -f mysql-service.yaml
+kubectl apply -f webapp-configmap.yaml
+kubectl apply -f webapp-deployment.yaml
+kubectl apply -f webapp-service.yaml

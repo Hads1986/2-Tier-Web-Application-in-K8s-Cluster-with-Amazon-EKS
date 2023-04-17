@@ -11,12 +11,11 @@ DBHOST = os.environ.get("DBHOST") or "localhost"
 DBUSER = os.environ.get("DBUSER") or "root"
 DBPWD = os.environ.get("DBPWD") or "password"
 DATABASE = os.environ.get("DATABASE") or "employees"
-BGIMG = os.environ.get("BGIMG") or "toronto.jpg"
-GRPNAME = os.environ.get("GRPNAME") or "Group 17"
+IMAGE = os.environ.get("IMAGE") or "newyork.jpg"
 DBPORT = int(os.environ.get("DBPORT", "3306"))
-key_id = os.environ.get("key_id") or "ASIARA6JQWLYY4WTXQ4B"
-access_key = os.environ.get("access_key") or "2WmuCHhzDkmG3qv/ncd7tX+zlFvQOZaStKLk7fsE"
-session_token = os.environ.get("session_token") or "FwoGZXIvYXdzEDQaDLJ0cuEznK5xA3FSWiLKATd96yurEzt3b3GPQSHo/f0Hhc5bVm5Ehbh18Kgh9LR0dfZ7md0BBPzYon0z2mbLGsh0QOcuqxUY+WOJbO2yp5FItQJjmEuKbxCo1p5+prwdtOAERI0VCgccggLMcNJT+RySfLNG/0k/frboJuYrT+arvzAf+aqvkYHEr+hEhHFZ3JfSNhuk1ecSjEsRgatquVImNNHVlGKu+3aJgYhi1G1/UMiHKcBpibiTY62H0hJ7TTkMXFwZQsYntCptP8IiKLkqE0G0gzX2WIYo7dvroQYyLfCM5kcozCUiHRyYPf0ocN1xilofWNw7cEzE8cbNMG9DzmDkgruLM3kYI2fphA=="
+key_id = os.environ.get("key_id") or "ASIARA6JQWLY5KPLEDOU"
+access_key = os.environ.get("access_key") or "YOd/cBOHgQj4iPiNg901qMqaEo/sNtWug06DfFgW"
+session_token = os.environ.get("session_token") or "FwoGZXIvYXdzEFMaDFAXeenBiPVUqp/2aiLKAac1hqLfZtsKa21o/qbvx0Oy7h68sVqBevqAikoSOFSazYU7YCfZWwN+D3tXue/e++MMdREifmgUkrHZ6DfRueBLbfz7OMDuCUP+IQrJ+E8p9tv7Y39nTjwVS2vIxiMyDKjGFgTxpHim0P9zIpy+rnERxdxS67FDo4bw4gu20W3LbNZSfWs3sX5e2AfRv9S8hoSr6zHbsUwmZhOQC22VfS+zC8cmhS8RY+tjAIkfkzQZ95yvmMmFi7wyMSrKqgnE5t9aBOG6hHZt7k0o1bvyoQYyLUog0ak1KjQRLXDO5cGgpxZokT0MXyDVu8i73SVbw3XjZYea7lR0BVlYF/6cRg=="
 
 # Create a connection to the MySQL database
 db_conn = connections.Connection(
@@ -30,16 +29,20 @@ db_conn = connections.Connection(
 output = {}
 table = 'employee';
 
-bucket = "s3bucket-g7" #"clo835images17jaspreet"
-image_default = "toronto.jpg"
+bucket = "s3bucket-g7"
+image_default = "newyork.jpg"
 
 @app.route("/download", methods=['GET', 'POST'])
 def download(bucket = bucket, imageName = image_default):
     try:
+        bucket = "s3bucket-g7"
+        image_default = "newyork.jpg"
         imagesDir = "static"
+        
         if not os.path.exists(imagesDir):
             os.makedirs(imagesDir)
-        bgImagePath = os.path.join(imagesDir, "background.png")
+            
+        imagePath = os.path.join(imagesDir, "image.png")
         
         session = boto3.Session(
             aws_access_key_id=key_id,
@@ -50,18 +53,18 @@ def download(bucket = bucket, imageName = image_default):
         
         print(bucket, imageName)
         s3 = session.resource('s3')
-        s3.Bucket(bucket).download_file(imageName, bgImagePath)
-        return os.path.join(imagesDir, "background.png")
+        s3.Bucket(bucket).download_file(imageName, imagePath)
+        return os.path.join(imagesDir, "image.png")
     except Exception as e:
-        print("Exception occured while fetching the image! Check the log --> ", e)
+        print("There was en exception! Error log: ", e)
        
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    return render_template('addemp.html', image=image, group_name=GRPNAME)
+    return render_template('addemp.html', image=image)
 
 @app.route("/about", methods=['GET','POST'])
 def about():
-    return render_template('about.html', image=image, group_name=GRPNAME)
+    return render_template('about.html', image=image)
     
 @app.route("/addemp", methods=['POST'])
 def AddEmp():
@@ -85,11 +88,11 @@ def AddEmp():
         cursor.close()
 
     print("all modification done...")
-    return render_template('addempoutput.html', name=emp_name, image=image, group_name=GRPNAME)
+    return render_template('addempoutput.html', name=emp_name, image=image)
 
 @app.route("/getemp", methods=['GET', 'POST'])
 def GetEmp():
-    return render_template("getemp.html", image=image, group_name=GRPNAME)
+    return render_template("getemp.html", image=image)
 
 
 @app.route("/fetchdata", methods=['GET','POST'])
@@ -117,9 +120,9 @@ def FetchData():
         cursor.close()
 
     return render_template("getempoutput.html", id=output["emp_id"], fname=output["first_name"],
-                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"], image=image, group_name=GRPNAME)
+                           lname=output["last_name"], interest=output["primary_skills"], location=output["location"], image=image)
 
 if __name__ == '__main__':
-    image = download(bucket, BGIMG)
+    image = download(bucket, IMAGE)
     print(image)
-    app.run(host='0.0.0.0',port=8080,debug=True)
+    app.run(host='0.0.0.0',port=81,debug=True)
