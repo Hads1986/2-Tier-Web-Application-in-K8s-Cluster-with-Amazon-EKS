@@ -24,15 +24,20 @@ spec:
           - name: DBHOST
             valueFrom:
               secretKeyRef:
-                name: webapp-secret
+                name: mysql
                 key: DBHOST
           - name: DBPWD
             valueFrom:
               secretKeyRef:
-                name: webapp-secret
+                name: mysql
                 key: DBPWD
           - name: DBPORT
             valueFrom:
               secretKeyRef:
-                name: webapp-secret
+                name: mysql
                 key: DBPORT
+          - name: IMAGE
+            valueFrom: 
+              configMapKeyRef:
+                name: webapp
+                key: IMAGE
