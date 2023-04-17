@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: webapp-configmap
+  name: webapp
+  namespace: final
 data:
-  BGIMG: "toronto.jpg"
+  IMAGE: "newyork.jpg"
