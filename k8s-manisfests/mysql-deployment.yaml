@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
+  namespace: final
   labels:
     app: mysql
 spec:
@@ -26,17 +27,17 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: mysql
               key: DBPWD
         - name: DBPORT
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
+              name: mysql
               key: DBPORT
       volumes:
         - name: vol-mysql
           persistentVolumeClaim:
-            claimName: mysql-pvc
+            claimName: mysql
   strategy:
     type: RollingUpdate
     rollingUpdate:

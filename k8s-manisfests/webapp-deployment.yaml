@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webapp
+  namespace: final
   labels:
     app: employees
 spec:
@@ -18,20 +19,25 @@ spec:
       - name: webapp
         image: 070752711409.dkr.ecr.us-east-1.amazonaws.com/group7-ecr:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 81
         env:
           - name: DBHOST
             valueFrom:
               secretKeyRef:
-                name: webapp-secret
+                name: mysql
                 key: DBHOST
           - name: DBPWD
             valueFrom:
               secretKeyRef:
-                name: webapp-secret
+                name: mysql
                 key: DBPWD
           - name: DBPORT
             valueFrom:
               secretKeyRef:
-                name: webapp-secret
+                name: mysql
                 key: DBPORT
+          - name: IMAGE
+            valueFrom: 
+              configMapKeyRef:
+                name: webapp
+                key: IMAGE
