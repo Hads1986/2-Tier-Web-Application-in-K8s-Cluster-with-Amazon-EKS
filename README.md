@@ -1,6 +1,6 @@
 # 2-Tiered Web Application in Managed K8s Cluster with Amazon EKS
 
-This project deploys a 2-tiered web application in a managed Kubernetes cluster using Amazon EKS. The deployment involves utilizing secrets, config maps, and PVC for MySQL and the web application.
+2-tier web app by configuring dynamic background image locations through a ConfigMap linked to private S3 buckets. Integrated with Kubernetes, the solution involved passing MySQL DB credentials as secrets and adding a custom header via Environment variable using Flask. Dockerized and locally tested in Cloud9, the app is stored on GitHub with GitHub Actions automating builds and publishing to Amazon ECR upon successful tests and establishing an Amazon EKS cluster, deploying Kubernetes resources like ConfigMap, Secret, PersistentVolumeClaim, ServiceAccount, K8s role, MySQL DB, Flask app, and services.
 
 ## Steps to Perform
 
