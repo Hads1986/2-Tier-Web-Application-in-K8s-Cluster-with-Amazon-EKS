@@ -1,4 +1,4 @@
-# 2-Tiered Web Application in Managed K8s Cluster with Amazon EKS
+# 2-Tier Web Application in Managed K8s Cluster with Amazon EKS
 
 This project deploys a 2-tiered web application in a managed Kubernetes cluster using Amazon EKS. The deployment involves utilizing secrets, config maps, and PVC for MySQL and the web application.
 
